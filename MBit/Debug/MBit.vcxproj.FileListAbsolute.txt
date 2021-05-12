@@ -1,0 +1,4 @@
+C:\Users\ilyat\source\repos\MBit\MBit\Debug\MBit.vcxprojAssemblyReference.cache
+C:\Users\ilyat\source\repos\MBit\MBit\Debug\MBit.FirstMainWindow.resources
+C:\Users\ilyat\source\repos\MBit\MBit\Debug\MBit.vcxproj.GenerateResource.cache
+C:\Users\ilyat\source\repos\MBit\MBit\Debug\MBit.TextInBit.resources
