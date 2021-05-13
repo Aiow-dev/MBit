@@ -597,8 +597,8 @@ namespace MBit {
 			// 
 			// list_tracks
 			// 
-			this->list_tracks->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->list_tracks->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(170)),
+				static_cast<System::Int32>(static_cast<System::Byte>(117)));
 			this->list_tracks->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->list_tracks->Font = (gcnew System::Drawing::Font(L"Roboto", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
@@ -613,8 +613,8 @@ namespace MBit {
 			// 
 			// tracks
 			// 
-			this->tracks->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->tracks->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(170)),
+				static_cast<System::Int32>(static_cast<System::Byte>(117)));
 			this->tracks->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->tracks->Font = (gcnew System::Drawing::Font(L"Roboto", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
@@ -739,36 +739,40 @@ private: System::Void button_play_music_Click(System::Object^ sender, System::Ev
 private: System::Void button_inbit_Click(System::Object^ sender, System::EventArgs^ e) {
 	if (name_music->Text->Length != 0 && name_music->Text!="openFileDialog1") {
 		if (field_textinbit->Text->Length != 0) {
-				saveFileDialog1->Filter = "WAV files(*.wav)|*.wav";
+			if (directory_text->Text != "Место расположения файла сохранения" && directory_text->Text->Length != 0) {
 				OpenFileDialog^ dil = gcnew System::Windows::Forms::OpenFileDialog();
-				dil->Filter= "WAV files(*.wav)|*.wav";
+				dil->Filter = "WAV files(*.wav)|*.wav";
 				if (dil->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
 					String^ fileToCopy = dil->FileName;
 					if (System::IO::File::Exists(fileToCopy)) {
-							String^ onlyFileName = System::IO::Path::GetFileName(dil->FileName);
-							String^ newLocation = directory_text->Text + onlyFileName;
-							System::IO::File::Copy(fileToCopy, newLocation, true);
+						String^ onlyFileName = System::IO::Path::GetFileName(dil->FileName);
+						String^ newLocation = directory_text->Text + onlyFileName;
+						System::IO::File::Copy(fileToCopy, newLocation, true);
 					}
 				}
-			srand(time(NULL));
-			int generate_id = 1 + rand() % 10000;
-			string get_id = to_string(generate_id) + ".txt";
-			ofstream theme_file(get_id);
-			string state_theme;
-			state_theme = Convert_String_to_string(field_textinbit->Text, state_theme);
-			theme_file << state_theme;
-			theme_file.close();
-			fstream file_key;
-			file_key.open("key.txt", ios_base::out | ios_base::trunc);
-			file_key << generate_id;
-			file_key.close();
-			fstream file_library;
-			file_library.open("library.txt", ios_base::app);
-			string library_track = "\n";
-			library_track = to_string(generate_id) + " : " + Convert_String_to_string(field_textinbit->Text, library_track) + " : " + Convert_String_to_string(name_music -> Text, library_track)+"\n";
-			file_library << library_track;
-			file_library.close();
-			MessageBox::Show("Текст встроен в аудио");
+				srand(time(NULL));
+				int generate_id = 1 + rand() % 10000;
+				string get_id = to_string(generate_id) + ".txt";
+				ofstream theme_file(get_id);
+				string state_theme;
+				state_theme = Convert_String_to_string(field_textinbit->Text, state_theme);
+				theme_file << state_theme;
+				theme_file.close();
+				fstream file_key;
+				file_key.open("key.txt", ios_base::out | ios_base::trunc);
+				file_key << generate_id;
+				file_key.close();
+				fstream file_library;
+				file_library.open("library.txt", ios_base::app);
+				string library_track = "\n";
+				library_track = to_string(generate_id) + " : " + Convert_String_to_string(field_textinbit->Text, library_track) + " : " + Convert_String_to_string(name_music->Text, library_track) + "\n";
+				file_library << library_track;
+				file_library.close();
+				MessageBox::Show("Текст встроен в аудио");
+			}
+			else {
+				MessageBox::Show("Не указано расположение файла сохранения");
+			}
 		}
 		else {
 			MessageBox::Show("Нет текста, чтобы его встроить в аудио");
@@ -834,7 +838,7 @@ private: System::Void button_action_inbit_Click(System::Object^ sender, System::
 	field_textinbit->Select();
 	field_textinbit->ScrollToCaret();
 	field_textinbit->SelectionStart = field_textinbit->Text->Length;
-	directory_text->Visible = false;
+	directory_text->Visible = true;
 	pictureBox3->Visible = true;
 	upload_file->Text = "Загрузите файл";
 	upload_file->Location = System::Drawing::Point(573, 78);
@@ -871,6 +875,16 @@ private: System::Void text_outbit_Click(System::Object^ sender, System::EventArg
 		get_text += get_file_text;
 		if (!open_file_with_id.eof()) {
 			get_text += '\n';
+		}
+	}
+	OpenFileDialog^ dil = gcnew System::Windows::Forms::OpenFileDialog();
+	dil->Filter = "WAV files(*.wav)|*.wav";
+	if (dil->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+		String^ fileToCopy = dil->FileName;
+		if (System::IO::File::Exists(fileToCopy)) {
+			String^ onlyFileName = System::IO::Path::GetFileName(dil->FileName);
+			String^ newLocation = directory_text->Text + onlyFileName;
+			System::IO::File::Copy(fileToCopy, newLocation, true);
 		}
 	}
 	field_outbit->Text = Convert_string_to_String(get_text, text_outbit->Text);
